@@ -5,6 +5,7 @@ HELP.md
 !**/src/test/**
 
 ### STS ###
+target/
 .apt_generated
 .classpath
 .factorypath
@@ -14,6 +15,7 @@ HELP.md
 .sts4-cache
 
 ### IntelliJ IDEA ###
+.idea
 *.iws
 *.iml
 *.ipr
