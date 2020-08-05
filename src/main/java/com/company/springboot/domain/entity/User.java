@@ -1,4 +1,4 @@
-package com.company.springboot.db.dto;
+package com.company.springboot.domain.entity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,9 +8,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+/**
+ * @author Min Xu
+ * @description User entity
+ */
+
 @Data
 @ApiModel("User")
-public class UserDto {
+public class User {
 
   @ApiModelProperty("User ID")
   @NotNull(message = "ID cannot be empty.")
