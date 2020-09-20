@@ -6,14 +6,13 @@ import com.company.springboot.vo.ResultVO;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * @author Min Xu
  * @description Global exception handler
  */
 
-@RestControllerAdvice
+//@RestControllerAdvice
 public class ExceptionControllerAdvice {
 
   @ExceptionHandler(APIException.class)

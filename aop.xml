@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+    <bean id="userRepository" class="com.company.springboot.repository.UserRepository"></bean>
+    <bean id="userService" class="com.company.springboot.service.impl.UserServiceImpl">
+        <property name="userRepository">
+            <ref bean="userRepository"/>
+        </property>
+    </bean>
+
+    <bean id="permissionAspect" class="com.company.springboot.aop.PermissionAspect"></bean>
+
+    <aop:config>
+        <aop:pointcut id="perform" expression="execution(* com.company.springboot.service.*.*(..))"/>
+        <aop:aspect ref="permissionAspect">
+            <aop:around method="permissionCheck" pointcut-ref="perform"/>
+        </aop:aspect>
+    </aop:config>
+</beans>
