@@ -1,7 +1,5 @@
 package com.company.springboot.entity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -22,7 +20,7 @@ import java.util.Date;
 public class UserEntity implements Serializable {
 
   @Id
-  @NotNull(message = "ID cannot be empty.")
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
   private Long id;
 
   @Column
