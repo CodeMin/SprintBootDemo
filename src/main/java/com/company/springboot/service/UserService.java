@@ -6,8 +6,8 @@ import java.util.Optional;
 
 public interface UserService {
 
-  Optional<UserEntity> getUserById(Long id);
+  Optional<UserEntity> getUserById(Long id) throws Throwable;
 
-  UserEntity saveUser(UserEntity userEntity);
+  UserEntity saveUser(UserEntity userEntity) throws Throwable;
 
 }

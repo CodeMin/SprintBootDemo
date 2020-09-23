@@ -23,16 +23,13 @@ public class UserEntity implements Serializable {
   @GeneratedValue(strategy=GenerationType.IDENTITY)
   private Long id;
 
-  @Column
   @NotNull(message = "Username cannot be empty.")
   @Size(min = 5, max = 20, message = "The length of username must be between 5 and 20.")
   private String name;
 
-  @Column
   @Email(message = "Invalid email format.")
   private String email;
 
-  @Column
   private String phone;
 
   @Column(name = "create_time")

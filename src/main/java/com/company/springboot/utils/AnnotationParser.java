@@ -1,6 +1,7 @@
 package com.company.springboot.utils;
 
-import com.company.springboot.annotation.PermissionInfo;
+import com.company.springboot.entity.UserEntity;
+import com.company.springboot.security.PermissionInfo;
 
 import java.lang.reflect.Method;
 
@@ -11,8 +12,14 @@ public class AnnotationParser {
    */
   public static String parse(Class targetClass, String methodName) throws Exception {
     String permissionName = "";
-    Method method = targetClass.getMethod(methodName);
-    if (method.isAnnotationPresent(PermissionInfo.class)) {
+    Method method = null;
+    if (methodName.equals("getUserById")) {
+      method = targetClass.getDeclaredMethod(methodName, Long.class);
+    } else if (methodName.equals("saveUser")) {
+      method = targetClass.getDeclaredMethod(methodName, UserEntity.class);
+    }
+
+    if (method != null && method.isAnnotationPresent(PermissionInfo.class)) {
       PermissionInfo permissionInfo = method.getAnnotation(PermissionInfo.class);
       permissionName = permissionInfo.name();
     }

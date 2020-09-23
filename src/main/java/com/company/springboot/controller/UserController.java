@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.NoPermissionException;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.Optional;
@@ -44,15 +45,21 @@ public class UserController {
           @ApiResponse(responseCode = "200", description = "Successful operation",
                   content = { @Content(mediaType = "application/json",
                           schema = @Schema(implementation = UserDto.class)) }),
+          @ApiResponse(responseCode = "403", description = "Forbidden",
+                  content = @Content),
           @ApiResponse(responseCode = "404", description = "Resource not found",
                   content = @Content)
   })
   @GetMapping("/{id}")
   @ResponseBody
-  public ResponseEntity getUserById(@PathVariable("id") Long id) {
-    Optional<UserEntity> userEntity = userService.getUserById(id);
-    if (userEntity.isPresent()) {
-      return ResponseEntity.status(HttpStatus.OK).body(convertToDto(userEntity.get()));
+  public ResponseEntity getUserById(@PathVariable("id") Long id) throws Throwable {
+    try {
+      Optional<UserEntity> userEntity = userService.getUserById(id);
+      if (userEntity != null && userEntity.isPresent()) {
+        return ResponseEntity.status(HttpStatus.OK).body(convertToDto(userEntity.get()));
+      }
+    } catch (NoPermissionException e) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -61,16 +68,16 @@ public class UserController {
   @Operation(summary = "Create a user")
   @ApiResponses(value = {
           @ApiResponse(responseCode = "201", description = "Created successfully",
-                  content = @Content),
+                  content = @Content(schema = @Schema(implementation = Long.class))),
           @ApiResponse(responseCode = "400", description = "Bad request",
                   content = @Content),
-          @ApiResponse(responseCode = "417", description = "Expectation failed",
+          @ApiResponse(responseCode = "403", description = "Forbidden",
                   content = @Content)
   })
   @PostMapping
   public ResponseEntity createUser(
           @Parameter(description = "User", required = true, schema = @Schema(implementation = UserDto.class))
-          @Valid @RequestBody UserDto userDto) {
+          @Valid @RequestBody UserDto userDto) throws Throwable {
     try {
       UserEntity userEntity = convertToEntity(userDto);
       userEntity = userService.saveUser(userEntity);
@@ -79,8 +86,8 @@ public class UserController {
       } else {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
       }
-    } catch (Exception ex) {
-      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(null);
+    } catch (NoPermissionException ex) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
   }
 

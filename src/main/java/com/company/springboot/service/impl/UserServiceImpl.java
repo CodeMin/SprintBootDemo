@@ -1,6 +1,6 @@
 package com.company.springboot.service.impl;
 
-import com.company.springboot.annotation.PermissionInfo;
+import com.company.springboot.security.PermissionInfo;
 import com.company.springboot.entity.UserEntity;
 import com.company.springboot.repository.UserRepository;
 import com.company.springboot.service.UserService;
@@ -19,14 +19,14 @@ public class UserServiceImpl implements UserService {
     this.userRepository = userRepository;
   }
 
-  @PermissionInfo(name = "getUser")
   @Override
+  @PermissionInfo(name = "Get")
   public Optional<UserEntity> getUserById(Long id) {
     return userRepository.getById(id);
   }
 
-  @PermissionInfo(name = "saveUser")
   @Override
+  @PermissionInfo(name = "Save")
   public UserEntity saveUser(UserEntity userEntity) {
     return userRepository.save(userEntity);
   }
