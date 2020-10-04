@@ -1,14 +1,14 @@
 package com.company.springboot.security;
 
+import com.company.springboot.constant.APIPermission;
+import com.company.springboot.exception.NoPermissionException;
 import com.company.springboot.utils.AnnotationParser;
 import com.company.springboot.utils.Permission;
 import lombok.Data;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
-import javax.naming.NoPermissionException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,8 +21,8 @@ public class PermissionCheckAspect {
    * User's access permissions
    */
   private final List<Permission> permissions = new ArrayList<>(Arrays.asList(
-          new Permission("Get"),
-          new Permission("Save")
+          new Permission(APIPermission.Get),
+          new Permission(APIPermission.Save)
   ));
 
   /**
@@ -79,8 +79,7 @@ public class PermissionCheckAspect {
     if (hasPermission) {
       return joinPoint.proceed(); // execute target method
     } else {
-      System.out.println("No permission to " + methodName);
-      return null;
+      throw new NoPermissionException(methodName);
     }
   }
 }
