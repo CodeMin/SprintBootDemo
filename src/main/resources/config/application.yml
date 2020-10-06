@@ -26,9 +26,12 @@ spring:
     show-sql: true
   show-sql: true
 
+
 server:
   port: 8080
 
-#logging:
-#  level:
-#    root: debug
+logging:
+  level:
+    root: INFO
+  file:
+    name: log/spring-boot-demo.log

@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
+
+  private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
   private final UserService userService;
   private final ModelMapper modelMapper;
@@ -53,9 +57,11 @@ public class UserController {
   public UserDto getUserById(@PathVariable("id") Long id) throws Throwable {
     Optional<UserEntity> userEntity = userService.getUserById(id);
     if (userEntity != null && userEntity.isPresent()) {
+      logger.info("User {} found", id);
       return convertToDto(userEntity.get());
     }
 
+    logger.info("User {} not found", id);
     throw new ResourceNotFoundException(id);
   }
 
@@ -70,12 +76,14 @@ public class UserController {
           @Parameter(description = "User", required = true, schema = @Schema(implementation = UserDto.class))
           @Valid @RequestBody UserDto userDto) throws Throwable {
     if (StringUtils.isEmpty(userDto.getName())) {
+      logger.info("User name is empty");
       throw new BadRequestException("Name is required");
     }
 
     UserEntity userEntity = convertToEntity(userDto);
     userEntity = userService.saveUser(userEntity);
     if (userEntity != null) {
+      logger.info("Create user {} successfully", userEntity.getId());
       return userEntity.getId();
     }
 
