@@ -1,4 +1,4 @@
-package com.company.springboot.utils;
+package com.company.springboot.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

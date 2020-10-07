@@ -3,7 +3,6 @@ package com.company.springboot.security;
 import com.company.springboot.constant.APIPermission;
 import com.company.springboot.exception.NoPermissionException;
 import com.company.springboot.utils.AnnotationParser;
-import com.company.springboot.utils.Permission;
 import lombok.Data;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;

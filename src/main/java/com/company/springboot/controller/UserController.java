@@ -53,7 +53,7 @@ public class UserController {
   })
   @GetMapping("/{id}")
   @ResponseBody
-  @Cacheable(value = "user-key")
+  //@Cacheable(value = "user-key")
   public UserDto getUserById(@PathVariable("id") Long id) throws Throwable {
     Optional<UserEntity> userEntity = userService.getUserById(id);
     if (userEntity != null && userEntity.isPresent()) {
