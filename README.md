@@ -1,6 +1,6 @@
 # Spring Boot Demo Project
 
-##This is a demo project which shows how to build a Java service using Spring Boot to provide RESTful APIs. It uses below open source tech stacks:
+## This is a demo project which shows how to build a Java service using Spring Boot to provide RESTful APIs. It uses below open source tech stacks:
 
 ### Database: MySQL
 * Community Server: https://dev.mysql.com/downloads/mysql/
@@ -16,8 +16,11 @@
 ### Scheduled Task
 * Print the current time every 10 seconds
 
-### Apsect-Orient Programming
+### Aspect-Orient Programming
 * Permission check to API
+
+### Design Pattern
+* Watcher Pattern
 
 ### Unit Testing
 * JUnit 5
