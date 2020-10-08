@@ -2,6 +2,7 @@ package com.company.springboot.controller;
 
 import com.company.springboot.dto.UserDto;
 import com.company.springboot.entity.UserEntity;
+import com.company.springboot.event.UserCreatedEvent;
 import com.company.springboot.exception.BadRequestException;
 import com.company.springboot.exception.ResourceNotFoundException;
 import com.company.springboot.service.UserService;
@@ -18,10 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -38,11 +42,31 @@ public class UserController {
 
   private final UserService userService;
   private final ModelMapper modelMapper;
+  private final ApplicationContext applicationContext;
 
   @Autowired
-  public UserController(UserService userService, ModelMapper modelMapper) {
+  public UserController(ApplicationContext applicationContext, UserService userService, ModelMapper modelMapper) {
+    this.applicationContext = applicationContext;
     this.userService = userService;
     this.modelMapper = modelMapper;
+  }
+
+  @Operation(summary = "Get all users")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "Successful operation",
+                  content = { @Content(mediaType = "application/json",
+                          schema = @Schema(implementation = Response.class)) })
+  })
+  @GetMapping("")
+  @ResponseBody
+  @Cacheable(value = "user-key")
+  public List<UserDto> getAllUsers() throws Throwable {
+    List<UserEntity> userEntities = userService.getAllUsers();
+    List<UserDto> userDtos = new ArrayList<>();
+    for (UserEntity userEntity : userEntities) {
+      userDtos.add(convertToDto(userEntity));
+    }
+    return userDtos;
   }
 
   @Operation(summary = "Get a user by ID")
@@ -53,7 +77,7 @@ public class UserController {
   })
   @GetMapping("/{id}")
   @ResponseBody
-  //@Cacheable(value = "user-key")
+  @Cacheable(value = "user-key")
   public UserDto getUserById(@PathVariable("id") Long id) throws Throwable {
     Optional<UserEntity> userEntity = userService.getUserById(id);
     if (userEntity != null && userEntity.isPresent()) {
@@ -83,8 +107,10 @@ public class UserController {
     UserEntity userEntity = convertToEntity(userDto);
     userEntity = userService.saveUser(userEntity);
     if (userEntity != null) {
-      logger.info("Create user {} successfully", userEntity.getId());
-      return userEntity.getId();
+      Long userId = userEntity.getId();
+      logger.info("Created user {} successfully, publishing event...", userId);
+      applicationContext.publishEvent(new UserCreatedEvent(userId));
+      return userId;
     }
 
     throw new BadRequestException("Unknown error");

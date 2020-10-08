@@ -13,7 +13,9 @@ public class AnnotationParser {
   public static String parse(Class targetClass, String methodName) throws Exception {
     String permissionName = "";
     Method method = null;
-    if (methodName.equals("getUserById")) {
+    if (methodName.equals("getAllUsers")) {
+      method = targetClass.getDeclaredMethod(methodName);
+    } else if (methodName.equals("getUserById")) {
       method = targetClass.getDeclaredMethod(methodName, Long.class);
     } else if (methodName.equals("saveUser")) {
       method = targetClass.getDeclaredMethod(methodName, UserEntity.class);

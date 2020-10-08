@@ -6,6 +6,8 @@ import com.company.springboot.utils.AnnotationParser;
 import lombok.Data;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -16,6 +18,9 @@ import java.util.List;
 @Aspect
 @Component
 public class PermissionCheckAspect {
+
+  private static final Logger logger = LoggerFactory.getLogger(PermissionCheckAspect.class);
+
   /**
    * User's access permissions
    */
@@ -35,7 +40,7 @@ public class PermissionCheckAspect {
    */
   @Before("aop()")
   public void beforePermissionCheck() {
-    System.out.println("Before advice: beforePermissionCheck...");
+    logger.info("Before advice: beforePermissionCheck...");
   }
 
   /**
@@ -43,7 +48,7 @@ public class PermissionCheckAspect {
    */
   @After("aop()")
   public void afterPermissionCheck() {
-    System.out.println("After advice: afterPermissionCheck...");
+    logger.info("After advice: afterPermissionCheck...");
   }
 
   /**
@@ -52,7 +57,7 @@ public class PermissionCheckAspect {
    */
   @AfterThrowing(pointcut = "aop()", throwing = "e")
   public void exception(Exception e) {
-    System.out.println("Exception advice: exception..." + e);
+    logger.info("Exception advice: exception..." + e);
   }
 
   /**
