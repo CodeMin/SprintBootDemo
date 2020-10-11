@@ -11,6 +11,7 @@
 * Command reference: https://redis.io/commands
 
 ### Message Queue
+Use Rabbit MQ to handle high concurrent requests (2000 QPS).
 * Install RabbitMQ on Mac
 ```shell script
 brew install rabbitmq

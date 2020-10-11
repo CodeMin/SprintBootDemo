@@ -19,11 +19,13 @@ spring:
 
   rabbitmq:
     host: localhost
-    port: 15672
+    port: 5672
     username: guest
     password: guest
     template:
       mandatory: true
+    publisher-confirm-type: correlated
+    publisher-returns: true
 
   jpa:
     properties:
