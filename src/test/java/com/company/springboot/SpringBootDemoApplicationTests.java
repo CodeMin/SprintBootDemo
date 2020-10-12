@@ -14,7 +14,7 @@ class SpringBootDemoApplicationTests {
 
 	private final static Logger logger = LoggerFactory.getLogger(SpringBootDemoApplicationTests.class);
 
-	private final static int THREAD_NUM = 2000;
+	private final static int THREAD_NUM = 1000;
 	private final static String url = "http://localhost:8080/api/v1/users";
 
 	//RestTemplate restTemplate = new RestTemplate();
@@ -40,7 +40,7 @@ class SpringBootDemoApplicationTests {
 				}
 
 				String userIdMsg = "1"; // user ID
-				amqpTemplate.convertAndSend("topicExchange", "topic.user.routingkey.send", userIdMsg);
+				amqpTemplate.convertAndSend("topicExchange", "topic.user.routingkey.query", userIdMsg);
 //			ResponseEntity<String> response = restTemplate.getForEntity(url + "/1", String.class);
 //			assertEquals(response.getStatusCode(), HttpStatus.OK);
 				logger.info(Thread.currentThread().getName() + " is done!");

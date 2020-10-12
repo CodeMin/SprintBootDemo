@@ -23,10 +23,10 @@ public class RabbitMQListener {
   @Autowired
   AmqpTemplate amqpTemplate;
 
-  @RabbitListener(queues = "topic.user.sendqueue")
+  @RabbitListener(queues = "topic.user.query")
   @RabbitHandler
-  public void processMessage(String message) throws Throwable {
-    logger.info("Received message");
+  public void processQueryUserMessage(String message) throws Throwable {
+    logger.info("Received query user message");
     Long userId = null;
     try {
       userId = Long.parseLong(message);
@@ -37,8 +37,19 @@ public class RabbitMQListener {
     Optional<UserEntity> userEntityOptional = userService.getUserById(userId);
     if (userEntityOptional.isPresent()) {
       UserEntity userEntity = userEntityOptional.get();
-      logger.info("Send message back");
-      amqpTemplate.convertAndSend("topicExchange", "topic.user.routingkey.sendback", userEntity.toString());
+      logger.info("Reply user info");
+      amqpTemplate.convertAndSend("topicExchange", "topic.user.routingkey.reply", userEntity);
+    }
+  }
+
+  @RabbitListener(queues = "topic.user.reply")
+  @RabbitHandler
+  public void processReplyUserMessage(UserEntity message) {
+    if (message != null) {
+      logger.info("Received reply user message");
+      logger.info("The name of user {} is {}", message.getId(), message.getName());
+    } else {
+      logger.warn("No any user info replied");
     }
   }
 }

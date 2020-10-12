@@ -10,20 +10,31 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-  // Declare the queue
+  // Declare the queues
   @Bean
-  public Queue sendQueue() {
-    return new Queue("topic.user.sendqueue", true);
+  public Queue sendQueryUserQueue() {
+    return new Queue("topic.user.query", true);
   }
 
-  // Declare the exchange
+  @Bean
+  public Queue sendReplyUserQueue() {
+    return new Queue("topic.user.reply", true);
+  }
+
+  // Declare the exchanges
   @Bean
   public TopicExchange exchange() {
     return new TopicExchange("topicExchange");
   }
 
+  // Binding queue to exchange
   @Bean
-  public Binding binding() {
-    return BindingBuilder.bind(sendQueue()).to(exchange()).with("topic.user.routingkey.send");
+  public Binding bindingQueryUser() {
+    return BindingBuilder.bind(sendQueryUserQueue()).to(exchange()).with("topic.user.routingkey.query");
+  }
+
+  @Bean
+  public Binding bindingReplyUser() {
+    return BindingBuilder.bind(sendReplyUserQueue()).to(exchange()).with("topic.user.routingkey.reply");
   }
 }

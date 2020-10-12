@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -16,8 +17,9 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "user")
-public class UserEntity {
+public class UserEntity implements Serializable {
 
+  private static final long serialVersionUID = 4290600662059370037L;
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
   private Long id;
